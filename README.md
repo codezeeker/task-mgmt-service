@@ -3,3 +3,7 @@ backend for the task mgmt tool
 
 Description of the project:
 
+
+Authors:
+Zee
+Ahmed
