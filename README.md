@@ -2,7 +2,8 @@
 backend for the task mgmt tool
 
 Description of the project:
-hello
+**hello**
+
 halo
 bonjour
 ni hao
