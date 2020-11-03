@@ -1,14 +1,11 @@
-stuffs = []
-while True:
-    print("add your list item:")
-    items = input()
-    stuffs.append(items)
-    print(stuffs)
-    cont = input("Do you want to continue?")
-    if cont == "y":
-        continue
-    elif cont == "n":
-        break
-print("here is your list of items today: ", stuffs)
+cont = "y"
+lst = list()
+while cont == "y":
+
+    lst = lst.append(input("enter the list item: "))
+
+    print("Here are the task list for today:", lst)
+    cont = input("Do you want to continue?[y/n] :")
+print(" -------------- ")
 print(" -------------- ")
 print("Have a good day")
