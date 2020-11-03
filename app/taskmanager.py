@@ -1,11 +1,13 @@
 cont = "y"
 lst = list()
 while cont == "y":
+    item = input("\nEnter the list item: ")
+    lst.append(item)
+    cont = input("\nDo you want to continue?[y/n] :")
 
-    lst = lst.append(input("enter the list item: "))
-
-    print("Here are the task list for today:", lst)
-    cont = input("Do you want to continue?[y/n] :")
-print(" -------------- ")
-print(" -------------- ")
-print("Have a good day")
+print("\n\n------------------")
+print("   Today's tasks")
+print("------------------")
+for i in lst:
+    print(i+"\n")
+print("------------------")
