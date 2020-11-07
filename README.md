@@ -2,12 +2,16 @@
 backend for the task mgmt tool
 
 Description of the project:
-**hello**
 
-halo
-bonjour
-ni hao
 
-Authors:
-Zee
+
+
+
+Dependency:
+```python
+pip install -r requirements.txt
+```
+
+## Authors:
+Zee  
 Ahmed
