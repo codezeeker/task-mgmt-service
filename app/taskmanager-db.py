@@ -9,9 +9,9 @@ def create_connection():
         conn = sqlite3.connect(':memory:')
         #conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute("CREATE TABLE IF NOT EXISTS todo (item TEXT)")
+        curs.execute("CREATE TABLE IF NOT EXISTS todo (item TEXT(128))")
 
-        curs.execute("INSERT INTO todo values('first item')")
+        curs.execute("INSERT INTO todo(item) VALUES('first item')")
 
 
         #test
