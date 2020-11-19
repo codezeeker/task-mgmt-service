@@ -10,8 +10,8 @@ def create_connection():
         #conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
         curs.execute("CREATE TABLE IF NOT EXISTS todo (item TEXT(128))")
-
-        curs.execute("INSERT INTO todo(item) VALUES('first item')")
+        list_item = input("add the task: ")
+        curs.execute("INSERT INTO todo(item) VALUES(?)")
 
 
         #test
