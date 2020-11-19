@@ -5,12 +5,13 @@ def create_connection():
     """ create a database connection to a SQLite database """
     conn = None
     try:
-        conn = sqlite3.connect(':memory:')
-        #conn = sqlite3.connect('mydatabase.db')
+        # conn = sqlite3.connect(':memory:')
+        conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
         curs.execute("CREATE TABLE IF NOT EXISTS todo (item TEXT)")
         list_item = input("add the task: ")
         curs.execute("INSERT INTO todo(item) VALUES(?)", [list_item])
+        curs.execute("COMMIT")
     except Error as e:
         print(e)
     finally:
@@ -20,7 +21,8 @@ def create_connection():
 def retrieve_rows():
     conn = None
     try:
-        conn = sqlite3.connect(':memory:')
+        conn = sqlite3.connect('mydatabase.db')
+        # conn = sqlite3.connect(':memory:')
         curs = conn.cursor()
         curs.execute("SELECT * from todo")
         rows = curs.fetchall()
