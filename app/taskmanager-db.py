@@ -9,15 +9,15 @@ def create_connection():
         conn = sqlite3.connect(':memory:')
         #conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute("CREATE TABLE IF NOT EXISTS todo (item TEXT(128))")
+        curs.execute("CREATE TABLE IF NOT EXISTS todo (item TEXT)")
         list_item = input("add the task: ")
-        curs.execute("INSERT INTO todo(item) VALUES(?)")
+        curs.execute("INSERT INTO todo(item) VALUES(?)", [list_item])
 
 
         #test
-        curs.execute("SELECT * from todo")
-        rows = curs.fetchall()
-        print(rows)
+        # curs.execute("SELECT * from todo")
+        # rows = curs.fetchall()
+        # print(rows)
 
     except Error as e:
         print(e)
@@ -25,8 +25,8 @@ def create_connection():
         if conn:
             conn.close()
 
+cont = "y"
+while cont == "y":
 
-create_connection()
-
-#if __name__ == '__main__':
-#    create_connection()
+    create_connection()
+    cont = input("\no you want to continue[y/n]: ")
