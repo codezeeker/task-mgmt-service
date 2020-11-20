@@ -1,1 +1,3 @@
 pysqlite3
+flask
+jsonify
