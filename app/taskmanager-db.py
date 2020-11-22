@@ -37,7 +37,7 @@ def retrieve_rows():
 cont = "y"
 while cont == "y":
     create_connection()
-    cont = input("\no you want to continue[y/n]: ")
+    cont = input("\nDo you want to continue[y/n]: ")
 
     if cont == "n":
         print("Here is your list:")
