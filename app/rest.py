@@ -5,7 +5,7 @@ from sqlite3 import Error
 app = Flask(__name__)
 
 
-#test
+# test
 @app.route("/", methods=['GET'])
 def hello():
     return jsonify({'message': 'Hello world!'})
@@ -21,7 +21,6 @@ def create_db():
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
         curs.execute("CREATE TABLE IF NOT EXISTS todo (item TEXT)")
-        curs.execute("INSERT INTO todo(item) VALUES(?)", [])
         curs.execute("COMMIT")
     except Error as e:
         print(e)
@@ -29,7 +28,20 @@ def create_db():
         if conn:
             conn.close()
 
-
+# Insert a new task
+def insert_task():
+    conn = None
+    try:
+        # conn = sqlite3.connect(':memory:')
+        conn = sqlite3.connect('mydatabase.db')
+        curs = conn.cursor()
+        curs.execute("INSERT INTO todo(item) VALUES(?)", ["item1"])
+        curs.execute("COMMIT")
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
 
 # Retrieve table
 @app.route("/view", methods=['GET'])
@@ -51,12 +63,12 @@ def retrieve_rows():
 
 # Update the table
 @app.route("/new", methods=['GET'])
-def update_task():
+def update_task(index, new_value):
     conn = None
     try:
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute("")
+        curs.execute("UPDATE todo SET item=(?), item_value=(?)", index, new_value)
         return jsonify({'tasks': rows})
     except Error as e:
         print(e)
@@ -67,12 +79,12 @@ def update_task():
 
 # Delete the task based on index
 @app.route("/new", methods=['GET'])
-def delete_task():
+def delete_task(index):
     conn = None
     try:
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute("")
+        curs.execute("DELETE FROM todo WHERE item=(?)", index)
         return jsonify({'tasks': rows})
     except Error as e:
         print(e)
