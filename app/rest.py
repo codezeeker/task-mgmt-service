@@ -13,7 +13,7 @@ def hello():
 
 
 # Create table
-@app.route("/view", methods=['GET'])
+@app.route("/view", methods=['POST'])
 def create_db():
     conn = None
     try:
@@ -29,6 +29,7 @@ def create_db():
             conn.close()
 
 # Insert a new task
+@app.route("/view", methods=['PUT'])
 def insert_task():
     conn = None
     try:
@@ -62,7 +63,7 @@ def retrieve_rows():
 
 
 # Update the table
-@app.route("/new", methods=['GET'])
+@app.route("/new", methods=['PUT'])
 def update_task(index, new_value):
     conn = None
     try:
@@ -78,7 +79,7 @@ def update_task(index, new_value):
 
 
 # Delete the task based on index
-@app.route("/new", methods=['GET'])
+@app.route("/new", methods=['DELETE'])
 def delete_task(index):
     conn = None
     try:
