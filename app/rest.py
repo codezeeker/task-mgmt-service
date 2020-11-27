@@ -51,13 +51,11 @@ def add_item():
 @app.route("/items/all", methods=['GET'])
 def get_all_items():
     # Get items from the helper
-    res_data = helper.retrieve_rows()
+    rows = helper.retrieve_rows()
 
     # Return response
-    response = Response(json.dumps(res_data), mimetype='application/json')
+    response = Response(json.dumps({'tasks': rows}), mimetype='application/json')
     return response
-
-
 
 # Delete the task
 @app.route('/item/remove', methods=['DELETE'])

@@ -24,8 +24,7 @@ def retrieve_rows():
         curs = conn.cursor()
         curs.execute("SELECT * from todo")
         rows = curs.fetchall()
-        print(rows)
-        return jsonify({'tasks': rows})
+        return rows
     except Error as e:
         print(e)
     finally:
