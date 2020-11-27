@@ -1,26 +1,25 @@
 import sqlite3
-from flask import Flask, jsonify
+import helper
+import json
+from flask import Flask, jsonify, request, Response, Request
 from sqlite3 import Error
 
 app = Flask(__name__)
 
-
-# test
+# default
 @app.route("/", methods=['GET'])
 def hello():
     return jsonify({'message': 'Hello world!'})
 
 
-
 # Create table
-@app.route("/view", methods=['POST'])
 def create_db():
     conn = None
     try:
         # conn = sqlite3.connect(':memory:')
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute("CREATE TABLE IF NOT EXISTS todo (item TEXT)")
+        curs.execute("CREATE TABLE IF NOT EXISTS todo (item TEXT NOT NULL PRIMARY KEY)")
         curs.execute("COMMIT")
     except Error as e:
         print(e)
@@ -28,70 +27,57 @@ def create_db():
         if conn:
             conn.close()
 
-# Insert a new task
-@app.route("/view", methods=['PUT'])
-def insert_task():
-    conn = None
-    try:
-        # conn = sqlite3.connect(':memory:')
-        conn = sqlite3.connect('mydatabase.db')
-        curs = conn.cursor()
-        curs.execute("INSERT INTO todo(item) VALUES(?)", ["item1"])
-        curs.execute("COMMIT")
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
+# Add item to list
+
+@app.route('/item/new', methods=['POST'])
+def add_item():
+
+    # Get item from the POST body
+    req_data = request.get_json()
+    item = req_data['item']
+
+    # Add to list
+    res_data = helper.add_task(item)
+
+    # error response
+    if res_data is None:
+        response = Response("{'error': 'Item not added - " + item + "'}", status=400 , mimetype='application/json')
+        return response
+    # return response
+    response = Response(json.dumps(res_data), mimetype='application/json')
+    return response
 
 # Retrieve table
-@app.route("/view", methods=['GET'])
-def retrieve_rows():
-    conn = None
-    try:
-        conn = sqlite3.connect('mydatabase.db')
-        curs = conn.cursor()
-        curs.execute("SELECT * from todo")
-        rows = curs.fetchall()
-        print(rows)
-        return jsonify({'tasks': rows})
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
+@app.route("/items/all", methods=['GET'])
+def get_all_items():
+    # Get items from the helper
+    res_data = helper.retrieve_rows()
+
+    # Return response
+    response = Response(json.dumps(res_data), mimetype='application/json')
+    return response
 
 
-# Update the table
-@app.route("/new", methods=['PUT'])
-def update_task(index, new_value):
-    conn = None
-    try:
-        conn = sqlite3.connect('mydatabase.db')
-        curs = conn.cursor()
-        curs.execute("UPDATE todo SET item=(?), item_value=(?)", index, new_value)
-        return jsonify({'tasks': rows})
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
 
+# Delete the task
+@app.route('/item/remove', methods=['DELETE'])
+def delete_item():
+    # Get item from the POST body
+    req_data = request.get_json()
+    item = req_data['item']
 
-# Delete the task based on index
-@app.route("/new", methods=['DELETE'])
-def delete_task(index):
-    conn = None
-    try:
-        conn = sqlite3.connect('mydatabase.db')
-        curs = conn.cursor()
-        curs.execute("DELETE FROM todo WHERE item=(?)", index)
-        return jsonify({'tasks': rows})
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
+    # Delete item from the list
+    res_data = helper.delete_task(item)
+
+    # Return error if the item could not be deleted
+    if res_data is None:
+        response = Response("{'error': 'Error deleting item - '" + item +  "}", status=400 , mimetype='application/json')
+        return response
+
+    # Return response
+    response = Response(json.dumps(res_data), mimetype='application/json')
+
+    return response
 
 
 
