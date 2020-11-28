@@ -61,8 +61,6 @@ def get_all_items():
     response = Response(json.dumps({'tasks': rows}), mimetype='application/json')
     return response
 
-
-
 # Delete the task
 @app.route('/item/remove', methods=['DELETE'])
 def delete_item():
