@@ -6,7 +6,6 @@ from sqlite3 import Error
 PENDING = "pending"
 COMPLETED = "completed"
 
-
 def add_task(item):
     conn = None
     try:

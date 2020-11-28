@@ -28,7 +28,6 @@ def create_db():
             conn.close()
 
 
-
 # Add item to list
 @app.route('/item/new', methods=['POST'])
 def add_item():
@@ -49,7 +48,6 @@ def add_item():
     return response
 
 
-
 # Retrieve table
 @app.route("/items/all", methods=['GET'])
 def get_all_items():
@@ -60,6 +58,7 @@ def get_all_items():
     # Return response
     response = Response(json.dumps({'tasks': rows}), mimetype='application/json')
     return response
+
 
 # Delete the task
 @app.route('/item/remove', methods=['DELETE'])
@@ -83,7 +82,7 @@ def delete_item():
 # Update task
 @app.route('/item/update', methods=['PUT'])
 def update_status():
-    
+
     req_data = request.get_json()
     item = req_data['item']
     status = req_data['status']
