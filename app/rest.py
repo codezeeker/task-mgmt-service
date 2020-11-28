@@ -6,7 +6,7 @@ from sqlite3 import Error
 
 app = Flask(__name__)
 
-# default
+# default view
 @app.route("/", methods=['GET'])
 def hello():
     return jsonify({'message': 'Hello world!'})
