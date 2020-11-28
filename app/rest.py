@@ -13,13 +13,14 @@ def hello():
 
 
 # Create table
+@app.route('/create', methods=['GET'])
 def create_db():
     conn = None
     try:
         # conn = sqlite3.connect(':memory:')
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute("CREATE TABLE IF NOT EXISTS todo (item TEXT NOT NULL, status TEXT NOT NULL, PRIMARY KEY(item))")
+        curs.execute("CREATE TABLE IF NOT EXISTS todo (ID int NOT NULL AUTO_INCREMENT, item TEXT NOT NULL, status TEXT NOT NULL, PRIMARY KEY(ID))")
         curs.execute("COMMIT")
     except Error as e:
         print(e)
