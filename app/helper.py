@@ -1,5 +1,4 @@
 import sqlite3
-from flask import Flask, jsonify
 from sqlite3 import Error
 
 # status
@@ -11,9 +10,9 @@ def add_task(item):
     try:
         # conn = sqlite3.connect(':memory:')
         conn = sqlite3.connect('mydatabase.db')
-        curs = conn.cursor()
-        curs.execute("INSERT INTO todo(item, status) VALUES(?,?)", (item, PENDING))
-        curs.execute("COMMIT")
+        c = conn.cursor()
+        c.execute("INSERT INTO todo(item, status) VALUES(?,?)", (item, PENDING))
+        conn.commit()
         return {"item": item, "status": PENDING}
     except Error as e:
         print(e)
@@ -40,7 +39,7 @@ def delete_task(item):
     try:
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute('DELETE FROM todo WHERE item=?', (item,))
+        curs.execute('DELETE FROM todo WHERE item=?', [item,])
         curs.execute("COMMIT")
         return {'item': item}
     except Error as e:
@@ -62,7 +61,7 @@ def update_status(item, status):
     try:
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute('update items set status=? where item=?', (status, item))
+        curs.execute('update items set status=? where item=?',[status,item])
         curs.execute("COMMIT")
         return {item: status}
     except Error as e:

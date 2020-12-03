@@ -1,10 +1,12 @@
 import sqlite3
 import helper
 import json
-from flask import Flask, jsonify, request, Response, Request
+from flask import Flask, jsonify, request, Response
 from sqlite3 import Error
 
+
 app = Flask(__name__)
+
 
 # default view
 @app.route("/", methods=['GET'])
@@ -13,36 +15,38 @@ def hello():
 
 
 # Create table
-@app.route('/create', methods=['GET'])
-def create_db():
+def create_tab():
     conn = None
     try:
         # conn = sqlite3.connect(':memory:')
         conn = sqlite3.connect('mydatabase.db')
-        curs = conn.cursor()
-        curs.execute("CREATE TABLE IF NOT EXISTS todo (ID int NOT NULL AUTO_INCREMENT, item TEXT NOT NULL, status TEXT NOT NULL, PRIMARY KEY(ID))")
-        curs.execute("COMMIT")
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS todo(ID INTEGER PRIMARY KEY AUTOINCREMENT, item TEXT NOT NULL, status TEXT NOT NULL)")
+        conn.commit()
+
     except Error as e:
         print(e)
     finally:
         if conn:
             conn.close()
+create_tab()
 
 
 # Add item to list
+
+
 @app.route('/item/new', methods=['POST'])
 def add_item():
-
     # Get item from the POST body
     req_data = request.get_json()
-    item = req_data['item']
+    new_item = req_data['item']
 
     # Add to list
     res_data = helper.add_task(item)
 
     # error response
     if res_data is None:
-        response = Response("{'error': 'Item not added - " + item + "'}", status=400 , mimetype='application/json')
+        response = Response("{'error': 'Item not added - " + new_item + "'}", status=400, mimetype='application/json')
         return response
     # return response
     response = Response(json.dumps(res_data), mimetype='application/json')
@@ -52,7 +56,6 @@ def add_item():
 # Retrieve table
 @app.route("/items/all", methods=['GET'])
 def get_all_items():
-
     # Get items from the helper
     rows = helper.retrieve_rows()
 
@@ -64,7 +67,6 @@ def get_all_items():
 # Delete the task
 @app.route('/item/remove', methods=['DELETE'])
 def delete_item():
-
     req_data = request.get_json()
     item = req_data['item']
 
@@ -72,7 +74,7 @@ def delete_item():
 
     # Return error
     if res_data is None:
-        response = Response("{'error': 'Error deleting item - '" + item +  "}", status=400 , mimetype='application/json')
+        response = Response("{'error': 'Error deleting item - '" + item + "}", status=400, mimetype='application/json')
         return response
 
     # Return response
@@ -83,7 +85,6 @@ def delete_item():
 # Update task
 @app.route('/item/update', methods=['PUT'])
 def update_status():
-
     req_data = request.get_json()
     item = req_data['item']
     status = req_data['status']
@@ -92,12 +93,14 @@ def update_status():
 
     # Return error
     if res_data is None:
-        response = Response("{'error': 'Error updating item - '" + item + ", " + status   +  "}", status=400 , mimetype='application/json')
+        response = Response("{'error': 'Error updating item - '" + item + ", " + status + "}", status=400,
+                            mimetype='application/json')
         return response
 
     # Return response
     response = Response(json.dumps(res_data), mimetype='application/json')
     return response
+
 
 if __name__ == '__main__':
     app.run(debug=True)
