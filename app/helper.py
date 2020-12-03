@@ -5,6 +5,7 @@ from sqlite3 import Error
 PENDING = "pending"
 COMPLETED = "completed"
 
+
 def add_task(item):
     conn = None
     try:
@@ -20,6 +21,7 @@ def add_task(item):
         if conn:
             conn.close()
 
+
 def retrieve_rows():
     conn = None
     try:
@@ -34,12 +36,13 @@ def retrieve_rows():
         if conn:
             conn.close()
 
+
 def delete_task(item):
     conn = None
     try:
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute('DELETE FROM todo WHERE item=?', [item,])
+        curs.execute('DELETE FROM todo WHERE item=?', [item, ])
         curs.execute("COMMIT")
         return {'item': item}
     except Error as e:
@@ -48,8 +51,9 @@ def delete_task(item):
         if conn:
             conn.close()
 
+
 def update_status(item, status):
-    #check
+    # check
     if (status.lower().strip() == 'pending'):
         status = PENDING
     elif (status.lower().strip() == 'completed'):
@@ -61,7 +65,7 @@ def update_status(item, status):
     try:
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute('update items set status=? where item=?',[status,item])
+        curs.execute('update items set status=? where item=?', [status, item])
         curs.execute("COMMIT")
         return {item: status}
     except Error as e:

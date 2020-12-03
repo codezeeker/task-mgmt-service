@@ -4,7 +4,6 @@ import json
 from flask import Flask, jsonify, request, Response
 from sqlite3 import Error
 
-
 app = Flask(__name__)
 
 
@@ -29,24 +28,24 @@ def create_tab():
     finally:
         if conn:
             conn.close()
+
+
 create_tab()
 
 
 # Add item to list
-
-
 @app.route('/item/new', methods=['POST'])
 def add_item():
     # Get item from the POST body
     req_data = request.get_json()
-    new_item = req_data['item']
+    item = req_data['item']
 
     # Add to list
     res_data = helper.add_task(item)
 
     # error response
     if res_data is None:
-        response = Response("{'error': 'Item not added - " + new_item + "'}", status=400, mimetype='application/json')
+        response = Response("{'error': 'Item not added - " + item + "'}", status=400, mimetype='application/json')
         return response
     # return response
     response = Response(json.dumps(res_data), mimetype='application/json')
