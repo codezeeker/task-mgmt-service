@@ -56,12 +56,12 @@ def retrieve_rows():
             conn.close()
 
 
-def delete_task(item):
+def delete_task(ID):
     conn = None
     try:
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute('DELETE FROM todo WHERE item=?', [item, ])
+        curs.execute('DELETE FROM todo WHERE ID=?', [ID, ])
         curs.execute("COMMIT")
         return "success"
     except Error as e:
@@ -90,7 +90,7 @@ def update_status(item, status):
         return "success"
     except Error as e:
         print(e)
-        return None;
+        return None
     finally:
         if conn:
             conn.close()

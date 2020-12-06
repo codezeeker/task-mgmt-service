@@ -52,13 +52,13 @@ def get_all_items():
 @app.route('/item/remove', methods=['DELETE'])
 def delete_item():
     req_data = request.get_json()
-    item = req_data['item']
+    ID = req_data['ID']
 
-    res_data = helper.delete_task(item)
+    res_data = helper.delete_task(ID)
 
     # Return error
     if res_data is None:
-        response = Response("{'error': 'Error deleting item - '" + item + "}", status=400, mimetype='application/json')
+        response = Response("{'error': 'Error deleting item - '" + ID + "}", status=400, mimetype='application/json')
         return response
 
     # Return response
