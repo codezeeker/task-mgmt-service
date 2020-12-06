@@ -1,4 +1,3 @@
-import sqlite3
 import helper
 import json
 from flask import Flask, jsonify, request, Response
@@ -14,42 +13,28 @@ def hello():
 
 
 # Create table
-def create_tab():
-    conn = None
-    try:
-        # conn = sqlite3.connect(':memory:')
-        conn = sqlite3.connect('mydatabase.db')
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS todo(ID INTEGER PRIMARY KEY AUTOINCREMENT, item TEXT NOT NULL, status TEXT NOT NULL)")
-        conn.commit()
-
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
-
-
-create_tab()
-
+@app.route('/create', methods=['GET'])
+def create_table():
+    result = helper.create_table()
+    return Response("{'result': '" + result + "'}", status=200, mimetype='application/json')
 
 # Add item to list
 @app.route('/item/new', methods=['POST'])
 def add_item():
     # Get item from the POST body
-    req_data = request.get_json()
-    item = req_data['item']
-
+    req = request.get_json()
+    item = req['item']
+    ##### example debugging statement below
+    print(req)
     # Add to list
-    res_data = helper.add_task(item)
+    result = helper.add_task(item)
 
     # error response
-    if res_data is None:
+    if result is None:
         response = Response("{'error': 'Item not added - " + item + "'}", status=400, mimetype='application/json')
         return response
-    # return response
-    response = Response(json.dumps(res_data), mimetype='application/json')
-    return response
+
+    return Response("{'result': '" + result + "'}", status=200, mimetype='application/json')
 
 
 # Retrieve table
