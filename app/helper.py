@@ -6,6 +6,24 @@ PENDING = "pending"
 COMPLETED = "completed"
 
 
+def create_table():
+    conn = None
+    try:
+        # conn = sqlite3.connect(':memory:')
+        conn = sqlite3.connect('mydatabase.db')
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS todo(ID INTEGER PRIMARY KEY AUTOINCREMENT, item TEXT NOT NULL, status TEXT NOT NULL)")
+        conn.commit()
+        return "success"
+
+    except Error as e:
+        print(e)
+        return "error"
+    finally:
+        if conn:
+            conn.close()
+
+
 def add_task(item):
     conn = None
     try:
@@ -14,7 +32,7 @@ def add_task(item):
         c = conn.cursor()
         c.execute("INSERT INTO todo(item, status) VALUES(?,?)", (item, PENDING))
         conn.commit()
-        return {"item": item, "status": PENDING}
+        return "success"
     except Error as e:
         print(e)
     finally:
@@ -32,6 +50,7 @@ def retrieve_rows():
         return rows
     except Error as e:
         print(e)
+        return None
     finally:
         if conn:
             conn.close()
@@ -44,9 +63,10 @@ def delete_task(item):
         curs = conn.cursor()
         curs.execute('DELETE FROM todo WHERE item=?', [item, ])
         curs.execute("COMMIT")
-        return {'item': item}
+        return "success"
     except Error as e:
         print(e)
+        return None
     finally:
         if conn:
             conn.close()
@@ -65,11 +85,12 @@ def update_status(item, status):
     try:
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute('update items set status=? where item=?', [status, item])
+        curs.execute('update items set item=?, status=?,  where id=?', [item, status, id])
         curs.execute("COMMIT")
-        return {item: status}
+        return "success"
     except Error as e:
         print(e)
+        return None;
     finally:
         if conn:
             conn.close()
