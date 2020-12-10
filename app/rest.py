@@ -42,11 +42,17 @@ def add_item():
 def get_all_items():
     # Get items from the helper
     rows = helper.retrieve_rows()
-
+    return jsonify({'tasks' : rows})
     # Return response
-    response = Response(json.dumps({'tasks': rows}), mimetype='application/json')
-    return response
+    #response = Response(json.dumps({'tasks': rows}), mimetype='application/json')
+    #return response
 
+#Retrieve table
+@app.route("/items/pending", methods=['GET'])
+def get_pending_items():
+    # Get items from the helper
+    rows = helper.retrieve_pending()
+    return jsonify({'tasks' : rows})
 
 # Delete the task
 @app.route('/item/remove', methods=['DELETE'])
