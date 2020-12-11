@@ -86,7 +86,7 @@ def delete_task(ID):
             conn.close()
 
 
-def update_status(item, status):
+def update_status(ID, status):
     # check
     if (status.lower().strip() == 'pending'):
         status = PENDING
@@ -99,7 +99,7 @@ def update_status(item, status):
     try:
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute('update items set item=?, status=?,  where ID=?', [item, status, id])
+        curs.execute('UPDATE todo SET status=? WHERE ID=?', [status, ID])
         curs.execute("COMMIT")
         return "success"
     except Error as e:
