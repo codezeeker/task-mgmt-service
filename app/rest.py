@@ -47,7 +47,7 @@ def get_all_items():
     #response = Response(json.dumps({'tasks': rows}), mimetype='application/json')
     #return response
 
-#Retrieve table
+# Retrieve pending tasks only
 @app.route("/items/pending", methods=['GET'])
 def get_pending_items():
     # Get items from the helper
@@ -76,14 +76,14 @@ def delete_item():
 @app.route('/item/update', methods=['PUT'])
 def update_status():
     req_data = request.get_json()
-    item = req_data['item']
+    ID = req_data['ID']
     status = req_data['status']
 
-    res_data = helper.update_status(item, status)
+    res_data = helper.update_status(ID, status)
 
     # Return error
     if res_data is None:
-        response = Response("{'error': 'Error updating item - '" + item + ", " + status + "}", status=400,
+        response = Response("{'error': 'Error updating ID - '" + ID + "', " + status + "}", status=400,
                             mimetype='application/json')
         return response
 
