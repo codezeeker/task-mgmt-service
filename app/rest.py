@@ -1,7 +1,10 @@
+from model.task import Task
 import helper
 import json
+#import task
 from flask import Flask, jsonify, request, Response
 from sqlite3 import Error
+from model.task import EmployeeEncoder
 
 app = Flask(__name__)
 
@@ -12,8 +15,8 @@ def hello():
     return jsonify({'message': 'Hello world!'})
 
 
-# Create table
-@app.route('/create', methods=['GET'])
+# Create table - Endpoint should not be used 
+# @app.route('/create', methods=['GET'])
 def create_table():
     result = helper.create_table()
     return Response("{'result': '" + result + "'}", status=200, mimetype='application/json')
@@ -42,10 +45,24 @@ def add_item():
 def get_all_items():
     # Get items from the helper
     rows = helper.retrieve_rows()
-    return jsonify({'tasks' : rows})
+    print('DEBUG - Printing the DB fetched data rows')
+    print(rows)
+    task_list = get_tasks_list(rows)
+    print("DEBUG - Printing the model class list item how it will look like")
+    print(task_list)
+    jsondata = EmployeeEncoder().encode(task_list)
+    print("DEBUG - Printing the encoded JSON data to check how it will look like")
+    print(jsondata)
+
     # Return response
-    #response = Response(json.dumps({'tasks': rows}), mimetype='application/json')
-    #return response
+    response = Response(json.dumps(jsondata), mimetype='application/json')
+    return response
+
+def get_tasks_list(rows):
+    task_list = list()
+    for item in rows:
+        task_list.append(Task(item[0], item[1], item[2]))
+    return task_list
 
 # Retrieve pending tasks only
 @app.route("/items/pending", methods=['GET'])
@@ -53,6 +70,7 @@ def get_pending_items():
     # Get items from the helper
     rows = helper.retrieve_pending()
     return jsonify({'tasks' : rows})
+
 
 # Delete the task
 @app.route('/item/remove', methods=['DELETE'])
@@ -94,3 +112,6 @@ def update_status():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    #can run just one function instead of FLASK application
+    #get_all_items()
+    #create_table()
