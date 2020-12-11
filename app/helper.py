@@ -55,6 +55,20 @@ def retrieve_rows():
         if conn:
             conn.close()
 
+def retrieve_pending():
+    conn = None
+    try:
+        conn = sqlite3.connect('mydatabase.db')
+        curs = conn.cursor()
+        curs.execute("SELECT * from todo WHERE status='pending'")
+        rows = curs.fetchall()
+        return rows
+    except Error as e:
+        print(e)
+        return None
+    finally:
+        if conn:
+            conn.close()
 
 def delete_task(ID):
     conn = None
@@ -72,7 +86,7 @@ def delete_task(ID):
             conn.close()
 
 
-def update_status(item, status):
+def update_status(ID, status):
     # check
     if (status.lower().strip() == 'pending'):
         status = PENDING
@@ -85,7 +99,7 @@ def update_status(item, status):
     try:
         conn = sqlite3.connect('mydatabase.db')
         curs = conn.cursor()
-        curs.execute('update items set item=?, status=?,  where id=?', [item, status, id])
+        curs.execute('UPDATE todo SET status=? WHERE ID=?', [status, ID])
         curs.execute("COMMIT")
         return "success"
     except Error as e:
